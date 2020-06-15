@@ -42,9 +42,7 @@ class AgencyTestCase(unittest.TestCase):
         """Executed after reach test"""
         pass
 
-    def test_create_new_actor(self):
-        """Test POST new actor."""
-
+    def test_post_new_actor(self):
         json_create_actor = {
             'name': 'Crisso',
             'age': 25
@@ -71,7 +69,7 @@ class AgencyTestCase(unittest.TestCase):
         self.assertFalse(data['success'])
         self.assertEqual(data['message'], 'Expects Authorization Header')
 
-    def test_error_422_create_new_actor(self):
+    def test_error_422_post_new_actor(self):
         json_create_actor_without_name = {
             'age': 25
         }
@@ -85,7 +83,6 @@ class AgencyTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'no name provided.')
 
     def test_get_all_actors(self):
-        """Test GET all actors."""
         res = self.client().get('/actors?page=1', headers=casting_assistant_auth_header)
         data = json.loads(res.data)
 
@@ -102,7 +99,6 @@ class AgencyTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Expects Authorization Header')
 
     def test_error_404_get_actors(self):
-        """Test Error GET all actors."""
         res = self.client().get('/actors?page=1125125125',
                                 headers=casting_assistant_auth_header)
         data = json.loads(res.data)
@@ -115,8 +111,7 @@ class AgencyTestCase(unittest.TestCase):
 # Tests for /actors PATCH
 #----------------------------------------------------------------------------#
 
-    def test_edit_actor(self):
-        """Test PATCH existing actors"""
+    def test_patch_actor(self):
         json_edit_actor_with_new_age = {
             'age': 30
         }
@@ -129,7 +124,7 @@ class AgencyTestCase(unittest.TestCase):
         self.assertTrue(len(data['actor']) > 0)
         self.assertEqual(data['updated'], 1)
 
-    def test_error_400_edit_actor(self):
+    def test_error_400_patch_actor(self):
         res = self.client().patch('/actors/123412', headers=casting_director_auth_header)
         data = json.loads(res.data)
 
@@ -138,7 +133,7 @@ class AgencyTestCase(unittest.TestCase):
         self.assertEqual(
             data['message'], 'request does not contain a valid JSON body.')
 
-    def test_error_404_edit_actor(self):
+    def test_error_404_patch_actor(self):
         json_edit_actor_with_new_age = {
             'age': 30
         }
@@ -192,7 +187,7 @@ class AgencyTestCase(unittest.TestCase):
 # Tests for /movies POST
 #----------------------------------------------------------------------------#
 
-    def test_create_new_movie(self):
+    def test_post_new_movie(self):
         json_create_movie = {
             'title': 'Crisso Movie',
             'release_date': date.today()
@@ -206,7 +201,7 @@ class AgencyTestCase(unittest.TestCase):
         self.assertTrue(data['success'])
         self.assertEqual(data['created'], 2)
 
-    def test_error_422_create_new_movie(self):
+    def test_error_422_post_new_movie(self):
         json_create_movie_without_name = {
             'release_date': date.today()
         }
@@ -252,7 +247,7 @@ class AgencyTestCase(unittest.TestCase):
 # Tests for /movies PATCH
 #----------------------------------------------------------------------------#
 
-    def test_edit_movie(self):
+    def test_patch_movie(self):
         json_edit_movie = {
             'release_date': date.today()
         }
@@ -264,7 +259,7 @@ class AgencyTestCase(unittest.TestCase):
         self.assertTrue(data['success'])
         self.assertTrue(len(data['movie']) > 0)
 
-    def test_error_400_edit_movie(self):
+    def test_error_400_patch_movie(self):
   
   
         res = self.client().patch('/movies/1', headers=executive_producer_auth_header)
@@ -275,8 +270,7 @@ class AgencyTestCase(unittest.TestCase):
         self.assertEqual(
             data['message'], 'request does not contain a valid JSON body.')
 
-    def test_error_404_edit_movie(self):
-        """Test PATCH with non valid id"""
+    def test_error_404_patch_movie(self):
         json_edit_movie = {
             'release_date': date.today()
         }
@@ -294,7 +288,6 @@ class AgencyTestCase(unittest.TestCase):
 #----------------------------------------------------------------------------#
 
     def test_error_401_delete_movie(self):
-        """Test DELETE existing movie w/o Authorization"""
         res = self.client().delete('/movies/1')
         data = json.loads(res.data)
 
@@ -303,7 +296,6 @@ class AgencyTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Expects Authorization Header')
 
     def test_error_403_delete_movie(self):
-        """Test DELETE existing movie with wrong permissions"""
         res = self.client().delete('/movies/1', headers=casting_assistant_auth_header)
         data = json.loads(res.data)
 
@@ -312,7 +304,6 @@ class AgencyTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Permissions not found')
 
     def test_delete_movie(self):
-        """Test DELETE existing movie"""
         res = self.client().delete('/movies/1', headers=executive_producer_auth_header)
         data = json.loads(res.data)
 
@@ -321,7 +312,6 @@ class AgencyTestCase(unittest.TestCase):
         self.assertEqual(data['deleted'], '1')
 
     def test_error_404_delete_movie(self):
-        """Test DELETE non existing movie"""
         res = self.client().delete('/movies/151251', headers=executive_producer_auth_header)
         data = json.loads(res.data)
 
