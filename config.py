@@ -26,3 +26,4 @@ bearer_tokens = {
 pagination = {
     "views_per_page": 10
 }
+
